@@ -1,15 +1,18 @@
 # -*- coding: utf-8 -*-
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import Select
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import NoAlertPresentException
+from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.common.action_chains import ActionChains
 import unittest, time, re
 
-class AddNewGroup(unittest.TestCase):
+def is_alert_present(wd):
+    try:
+        wd.switch_to_alert().text
+        return True
+    except:
+        return False
+
+class test_add_new_group(unittest.TestCase):
     def setUp(self):
-        self.wd = webdriver.Firefox()
+        self.wd = WebDriver()
         self.wd.implicitly_wait(30)
 
     
@@ -32,16 +35,7 @@ class AddNewGroup(unittest.TestCase):
         wd.find_element_by_name("submit").click()
         wd.find_element_by_link_text("Logout").click()
     
-    def is_element_present(self, how, what):
-        try: self.wd.find_element(by=how, value=what)
-        except NoSuchElementException as e: return False
-        return True
-    
-    def is_alert_present(self):
-        try: self.wd.switch_to_alert()
-        except NoAlertPresentException as e: return False
-        return True
-    
+
     def close_alert_and_get_its_text(self):
         try:
             alert = self.wd.switch_to_alert()
