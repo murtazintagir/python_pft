@@ -73,9 +73,7 @@ class test_add_address_book(unittest.TestCase):
         wd.find_element_by_name("phone2").send_keys(Contact.phone2)
         wd.find_element_by_name("notes").clear()
         wd.find_element_by_name("notes").send_keys(Contact.notes)
-        #wd.find_element_by_name("bday").click()
-        #wd.find_element_by_name("bday").select_by_visible_text(Contact.birthday)
-        # submit group creation
+        # submit contact creation
         wd.find_element_by_name("submit").click()
 
     def open_address_book_page(self, wd):
