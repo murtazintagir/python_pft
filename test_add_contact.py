@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.support.ui import Select
 import unittest
 from contact import Data, Contact
 
@@ -23,7 +24,7 @@ class test_add_address_book(unittest.TestCase):
         self.login(wd, username="admin", password="secret")
         self.open_address_book_page(wd)
         self.create_data_info(wd, Data(first_name="first", middle_name="middle", last_name="last", nickname="nick", title="title", company="company", address="address"))
-        self.create_contact_info(wd, Contact(home="home", mobile="mobile", work="work", fax="fax", email="email", email2="email2", email3="email3", homepage="homepage", address2="address2", phone2="phone2", notes="notes"))
+        self.create_contact_info(wd, Contact(home="home", mobile="mobile", work="work", fax="fax", email="email", email2="email2", email3="email3", homepage="homepage", address2="address2", phone2="phone2", notes="notes", bday="9", bmonth="March", byear="1990",aday="9", amonth="March", ayear="2090"))
         self.logout(wd)
 
     def logout(self, wd):
@@ -73,6 +74,18 @@ class test_add_address_book(unittest.TestCase):
         wd.find_element_by_name("phone2").send_keys(Contact.phone2)
         wd.find_element_by_name("notes").clear()
         wd.find_element_by_name("notes").send_keys(Contact.notes)
+        wd.find_element_by_name("bday").click()
+        Select(wd.find_element_by_name("bday")).select_by_visible_text(Contact.bday)
+        wd.find_element_by_name("bmonth").click()
+        Select(wd.find_element_by_name("bmonth")).select_by_visible_text(Contact.bmonth)
+        wd.find_element_by_name("byear").clear()
+        wd.find_element_by_name("byear").send_keys(Contact.byear)
+        wd.find_element_by_name("aday").click()
+        Select(wd.find_element_by_name("aday")).select_by_visible_text(Contact.aday)
+        wd.find_element_by_name("amonth").click()
+        Select(wd.find_element_by_name("amonth")).select_by_visible_text(Contact.amonth)
+        wd.find_element_by_name("ayear").clear()
+        wd.find_element_by_name("ayear").send_keys(Contact.ayear)
         # submit contact creation
         wd.find_element_by_name("submit").click()
 

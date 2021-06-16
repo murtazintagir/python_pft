@@ -11,7 +11,7 @@ class Data:
 
 class Contact:
 
-    def __init__(self, home, mobile, work, fax, email, email2, email3, homepage, address2, phone2, notes):#, birthday, anniversary):
+    def __init__(self, home, mobile, work, fax, email, email2, email3, homepage, bday, bmonth, byear, aday, amonth, ayear, address2, phone2, notes):
         self.home = home
         self.mobile = mobile
         self.work = work
@@ -20,8 +20,12 @@ class Contact:
         self.email2 = email2
         self.email3 = email3
         self.homepage = homepage
-        #self.birthday = birthday
-        #self.anniversary = anniversary
+        self.bday = bday
+        self.bmonth = bmonth
+        self.byear = byear
+        self.aday = aday
+        self.amonth = amonth
+        self.ayear = ayear
         self.address2 = address2
         self.phone2 = phone2
         self.notes = notes
