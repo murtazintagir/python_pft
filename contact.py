@@ -1,6 +1,6 @@
 class Data:
 
-    def __init__(self, first_name, middle_name, last_name, nickname, title, company, address):
+    def __init__(self, first_name, middle_name, last_name, nickname, title, company, address, home, mobile, work, fax, email, email2, email3, homepage, bday, bmonth, byear, aday, amonth, ayear, address2, phone2, notes):
         self.first_name = first_name
         self.middle_name = middle_name
         self.last_name = last_name
@@ -8,10 +8,6 @@ class Data:
         self.title = title
         self.company = company
         self.address = address
-
-class Contact:
-
-    def __init__(self, home, mobile, work, fax, email, email2, email3, homepage, bday, bmonth, byear, aday, amonth, ayear, address2, phone2, notes):
         self.home = home
         self.mobile = mobile
         self.work = work
