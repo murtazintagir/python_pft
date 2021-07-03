@@ -1,5 +1,6 @@
 from selenium.webdriver.support.ui import Select
 
+
 class ContactHelper:
 
     def __init__(self, app):
@@ -7,7 +8,7 @@ class ContactHelper:
 
     def create(self, contact):
         wd = self.app.wd
-        self.open_page()
+        self.open_contact_page()
         # заполняем адресную книгу
         self.filling_fields(contact, wd)
         # submit contact creation
@@ -63,33 +64,20 @@ class ContactHelper:
         wd.find_element_by_name("ayear").clear()
         wd.find_element_by_name("ayear").send_keys(contact.ayear)
 
-
     def delete_first_contact(self):
         wd = self.app.wd
-        wd.find_element_by_link_text("home").click()
+        self.open_home_page(wd)
         # выбираем контакт
         wd.find_element_by_name("selected[]").click()
         # удаляем контакт
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         wd.switch_to_alert().accept()
 
-    #def delete_search_contact(self):
-    #    wd = self.app.wd
-    #    # вибираем строку поиска
-    #    wd.find_element_by_name("searchstring").click()
-    #    wd.find_element_by_name("searchstring").clear()
-    #    wd.find_element_by_name("searchstring").send_keys("edit")
-    #    # выбираем контакт
-    #    wd.find_element_by_id("//input[@alt='Select (first_edit last_edit'").click()
-    #    # удаляем контакт
-    #    wd.find_element_by_xpath("//input[@value='Delete']").click()
-    #    wd.switch_to_alert().accept()
-
     def edit_first_contact(self, contact):
         wd = self.app.wd
         # добавляем контакт, но не заполняем поля
-        wd.find_element_by_link_text("home").click()
-        self.open_page()
+        self.open_home_page(wd)
+        self.open_contact_page()
         wd.find_element_by_name("submit").click()
         wd.find_element_by_link_text("home page").click()
         # редактируем поля в ранее созданной таблице
@@ -100,7 +88,10 @@ class ContactHelper:
         wd.find_element_by_name("update").click()
         wd.find_element_by_link_text("home page").click()
 
-    def open_page(self):
+    def open_home_page(self, wd):
+        wd.find_element_by_link_text("home").click()
+
+    def open_contact_page(self):
         wd = self.app.wd
         # открываем страницу добавления контакта
         wd.find_element_by_link_text("add new").click()
