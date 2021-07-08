@@ -88,12 +88,14 @@ class ContactHelper:
 
     def open_home_page(self):
         wd = self.app.wd
-        wd.find_element_by_link_text("home").click()
+        if not (len(wd.find_elements_by_name("searchform")) > 0):
+            wd.find_element_by_link_text("home").click()
 
     def open_contact_page(self):
         wd = self.app.wd
         # открываем страницу добавления контакта
-        wd.find_element_by_link_text("add new").click()
+        if not (len(wd.find_elements_by_name("firstname")) > 0 and len(wd.find_elements_by_name("lastname")) > 0):
+            wd.find_element_by_link_text("add new").click()
 
     def count(self):
         wd = self.app.wd
