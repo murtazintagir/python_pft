@@ -10,11 +10,12 @@ class ContactHelper:
         wd = self.app.wd
         self.open_contact_page()
         # заполняем адресную книгу
-        self.filling_fields(contact, wd)
+        self.filling_fields(contact)
         # submit contact creation
         wd.find_element_by_name("submit").click()
 
-    def filling_fields(self, contact, wd):
+    def filling_fields(self, contact):
+        wd = self.app.wd
         wd.find_element_by_name("firstname").clear()
         wd.find_element_by_name("firstname").send_keys(contact.first_name)
         wd.find_element_by_name("middlename").clear()
@@ -66,7 +67,7 @@ class ContactHelper:
 
     def delete_first_contact(self):
         wd = self.app.wd
-        self.open_home_page(wd)
+        self.open_home_page()
         # выбираем контакт
         wd.find_element_by_name("selected[]").click()
         # удаляем контакт
@@ -76,22 +77,25 @@ class ContactHelper:
     def edit_first_contact(self, contact):
         wd = self.app.wd
         # добавляем контакт, но не заполняем поля
-        self.open_home_page(wd)
-        self.open_contact_page()
-        wd.find_element_by_name("submit").click()
-        wd.find_element_by_link_text("home page").click()
+        self.open_home_page()
         # редактируем поля в ранее созданной таблице
         wd.find_element_by_name("selected[]").click()
         wd.find_element_by_xpath("//img[@alt='Edit']").click()
-        self.filling_fields(contact, wd)
+        self.filling_fields(contact)
         # submit contact creation
         wd.find_element_by_name("update").click()
         wd.find_element_by_link_text("home page").click()
 
-    def open_home_page(self, wd):
+    def open_home_page(self):
+        wd = self.app.wd
         wd.find_element_by_link_text("home").click()
 
     def open_contact_page(self):
         wd = self.app.wd
         # открываем страницу добавления контакта
         wd.find_element_by_link_text("add new").click()
+
+    def count(self):
+        wd = self.app.wd
+        self.open_home_page()
+        return len(wd.find_elements_by_name("selected[]"))
