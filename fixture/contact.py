@@ -1,4 +1,5 @@
 from selenium.webdriver.support.ui import Select
+from model.contact import Contact
 
 
 class ContactHelper:
@@ -73,6 +74,7 @@ class ContactHelper:
         # удаляем контакт
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         wd.switch_to_alert().accept()
+        wd.find_element_by_css_selector("div.msgbox")
 
     def edit_first_contact(self, contact):
         wd = self.app.wd
@@ -101,3 +103,15 @@ class ContactHelper:
         wd = self.app.wd
         self.open_home_page()
         return len(wd.find_elements_by_name("selected[]"))
+
+    def get_contact_list(self):
+        wd = self.app.wd
+        self.open_home_page()
+        contacts = []
+        for element in wd.find_elements_by_css_selector("[name=entry]"):
+            cells = element.find_elements_by_tag_name("td")
+            lastname = cells[1].text
+            firstname = cells[2].text
+            id = element.find_element_by_name("selected[]").get_attribute("value")
+            contacts.append(Contact(id=id, last_name=lastname, first_name=firstname))
+        return contacts
