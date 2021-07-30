@@ -1,5 +1,6 @@
 from model.group import Group
 
+
 class GroupHelper:
 
     def __init__(self, app):
@@ -21,13 +22,12 @@ class GroupHelper:
         # submit group creation
         wd.find_element_by_name("submit").click()
         self.return_to_groups_page()
+        self.group_cashe = None
 
     def filling_field(self, group):
-        wd = self.app.wd
         self.change_field("group_name", group.name)
         self.change_field("group_header", group.header)
         self.change_field("group_footer", group.footer)
-
 
     def change_field(self, field_name, text):
         wd = self.app.wd
@@ -44,7 +44,7 @@ class GroupHelper:
         # delete group
         wd.find_element_by_name("delete").click()
         self.return_to_groups_page()
-        #wd.find_element_by_name("delete")
+        self.group_cashe = None
 
     def edit_group(self, group):
         wd = self.app.wd
@@ -55,7 +55,7 @@ class GroupHelper:
         wd.find_element_by_name("edit").click()
         self.filling_field(group)
         wd.find_element_by_name("update").click()
-        #self.return_to_groups_page()
+        self.group_cashe = None
 
     def return_to_groups_page(self):
         wd = self.app.wd
@@ -72,12 +72,15 @@ class GroupHelper:
         self.open_group_page()
         return len(wd.find_elements_by_name("selected[]"))
 
+    group_cashe = None
+
     def get_group_list(self):
-        wd = self.app.wd
-        self.open_group_page()
-        groups = []
-        for element in wd.find_elements_by_css_selector("span.group"):
-            text = element.text
-            id = element.find_element_by_name("selected[]").get_attribute("value")
-            groups.append(Group(name=text, id=id))
-        return groups
+        if self.group_cashe is None:
+            wd = self.app.wd
+            self.open_group_page()
+            self.group_cashe = []
+            for element in wd.find_elements_by_css_selector("span.group"):
+                text = element.text
+                id = element.find_element_by_name("selected[]").get_attribute("value")
+                self.group_cashe.append(Group(name=text, id=id))
+        return list(self.group_cashe)

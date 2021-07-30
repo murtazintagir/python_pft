@@ -65,6 +65,7 @@ class ContactHelper:
         Select(wd.find_element_by_name("amonth")).select_by_visible_text(contact.amonth)
         wd.find_element_by_name("ayear").clear()
         wd.find_element_by_name("ayear").send_keys(contact.ayear)
+        self.contact_cashe = None
 
     def delete_first_contact(self):
         wd = self.app.wd
@@ -75,6 +76,7 @@ class ContactHelper:
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         wd.switch_to_alert().accept()
         wd.find_element_by_css_selector("div.msgbox")
+        self.contact_cashe = None
 
     def edit_first_contact(self, contact):
         wd = self.app.wd
@@ -87,6 +89,7 @@ class ContactHelper:
         # submit contact creation
         wd.find_element_by_name("update").click()
         wd.find_element_by_link_text("home page").click()
+        self.contact_cashe = None
 
     def open_home_page(self):
         wd = self.app.wd
@@ -104,14 +107,17 @@ class ContactHelper:
         self.open_home_page()
         return len(wd.find_elements_by_name("selected[]"))
 
+    contact_cashe = None
+
     def get_contact_list(self):
-        wd = self.app.wd
-        self.open_home_page()
-        contacts = []
-        for element in wd.find_elements_by_css_selector("[name=entry]"):
-            cells = element.find_elements_by_tag_name("td")
-            lastname = cells[1].text
-            firstname = cells[2].text
-            id = element.find_element_by_name("selected[]").get_attribute("value")
-            contacts.append(Contact(id=id, last_name=lastname, first_name=firstname))
-        return contacts
+        if self.contact_cashe is None:
+            wd = self.app.wd
+            self.open_home_page()
+            self.contact_cashe = []
+            for element in wd.find_elements_by_css_selector("[name=entry]"):
+                cells = element.find_elements_by_tag_name("td")
+                lastname = cells[1].text
+                firstname = cells[2].text
+                id = element.find_element_by_name("selected[]").get_attribute("value")
+                self.contact_cashe.append(Contact(id=id, last_name=lastname, first_name=firstname))
+        return self.contact_cashe
