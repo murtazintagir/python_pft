@@ -3,7 +3,7 @@ from model.contact import Contact
 from random import randrange
 
 
-def test_edit_first_contact(app):
+def test_edit_some_contact(app):
     contact = Contact(first_name="first_edit", middle_name="middle_edit", last_name="last_edit",
                       nickname="nick_edit", title="title_edit", company="company_edit",
                       address="address_edit", home="home_edit", mobile="mobile_edit", work="work_edit",

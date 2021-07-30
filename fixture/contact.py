@@ -1,5 +1,6 @@
 from selenium.webdriver.support.ui import Select
 from model.contact import Contact
+import re
 
 
 class ContactHelper:
@@ -89,13 +90,20 @@ class ContactHelper:
     def edit_contact_by_index(self, contact, index):
         wd = self.app.wd
         self.open_home_page()
-        self.select_contact_by_index(index)
-        wd.find_elements_by_xpath("//img[@alt='Edit']")[index].click()
+        self.open_edit_page(index)
         self.filling_fields(contact)
         # submit contact creation
         wd.find_element_by_name("update").click()
         wd.find_element_by_link_text("home page").click()
         self.contact_cashe = None
+
+    def open_edit_page(self, index):
+        wd = self.app.wd
+        wd.find_elements_by_xpath("//img[@alt='Edit']")[index].click()
+
+    def open_view_page(self, index):
+        wd = self.app.wd
+        wd.find_elements_by_xpath("//img[@alt='Details']")[index].click()
 
     def select_contact_by_index(self, index):
         wd = self.app.wd
@@ -128,6 +136,41 @@ class ContactHelper:
                 cells = element.find_elements_by_tag_name("td")
                 lastname = cells[1].text
                 firstname = cells[2].text
+                address = cells[3].text
+                all_emails = cells[4].text
+                all_phones = cells[5].text
                 id = element.find_element_by_name("selected[]").get_attribute("value")
-                self.contact_cashe.append(Contact(id=id, last_name=lastname, first_name=firstname))
+                self.contact_cashe.append(Contact(id=id, last_name=lastname, first_name=firstname, address=address,
+                                                  all_emails_from_home_page=all_emails, all_phones_from_home_page=all_phones))
         return self.contact_cashe
+
+    def get_contact_from_edit_page(self, index):
+        wd = self.app.wd
+        self.open_home_page()
+        self.open_edit_page(index)
+        lastname = wd.find_element_by_name("lastname").get_attribute("value")
+        firstname = wd.find_element_by_name("firstname").get_attribute("value")
+        id = wd.find_element_by_name("id").get_attribute("value")
+        homephone = wd.find_element_by_name("home").get_attribute("value")
+        mobilephone = wd.find_element_by_name("mobile").get_attribute("value")
+        workphone = wd.find_element_by_name("work").get_attribute("value")
+        secondaryphone = wd.find_element_by_name("phone2").get_attribute("value")
+        address = wd.find_element_by_name("address").get_attribute("value")
+        email = wd.find_element_by_name("email").get_attribute("value")
+        email2 = wd.find_element_by_name("email2").get_attribute("value")
+        email3 = wd.find_element_by_name("email3").get_attribute("value")
+        homepage = wd.find_element_by_name("homepage").get_attribute("value")
+        return Contact(last_name=lastname, first_name=firstname, id=id, home=homephone, mobile=mobilephone,
+                       work=workphone, phone2=secondaryphone, address=address, email=email, email2=email2,
+                       email3=email3, homepage=homepage)
+
+    def get_contact_from_view_page(self, index):
+        wd = self.app.wd
+        self.open_home_page()
+        self.open_view_page(index)
+        text = wd.find_element_by_id("content").text
+        homephone = re.search("H: (.*)", text).group(1)
+        workphone = re.search("W: (.*)", text).group(1)
+        mobilephone = re.search("M: (.*)", text).group(1)
+        secondaryphone = re.search("P: (.*)", text).group(1)
+        return Contact(home=homephone, mobile=mobilephone, work=workphone, phone2=secondaryphone)
