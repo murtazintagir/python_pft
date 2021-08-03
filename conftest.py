@@ -9,6 +9,7 @@ from fixture.db import DbFixture
 fixture = None
 target = None
 
+
 def load_config(file):
     global target
     if target is None:
@@ -16,7 +17,6 @@ def load_config(file):
         with open(config_file) as f:
             target = json.load(f)
     return target
-
 
 
 @pytest.fixture
@@ -49,9 +49,15 @@ def stop(request):
     return fixture
 
 
+@pytest.fixture
+def check_ui(request):
+    return request.config.getoption("--check_ui")
+
+
 def pytest_addoption(parser):
     parser.addoption("--browser", action="store", default="firefox")
     parser.addoption("--target", action="store", default="target.json")
+    parser.addoption("--check_ui", action="store_true")
 
 
 def pytest_generate_tests(metafunc):
