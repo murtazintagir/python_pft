@@ -83,6 +83,17 @@ class ContactHelper:
         wd.find_element_by_css_selector("div.msgbox")
         self.contact_cashe = None
 
+    def delete_contact_by_id(self, id):
+        wd = self.app.wd
+        self.open_home_page()
+        # выбираем контакт
+        self.select_contact_by_id(id)
+        # удаляем контакт
+        wd.find_element_by_xpath("//input[@value='Delete']").click()
+        wd.switch_to_alert().accept()
+        wd.find_element_by_css_selector("div.msgbox")
+        self.contact_cashe = None
+
     def edit_first_contact(self):
         wd = self.app.wd
         wd.edit_contact_by_index(0)
@@ -91,6 +102,16 @@ class ContactHelper:
         wd = self.app.wd
         self.open_home_page()
         self.open_edit_page(index)
+        self.filling_fields(contact)
+        # submit contact creation
+        wd.find_element_by_name("update").click()
+        wd.find_element_by_link_text("home page").click()
+        self.contact_cashe = None
+
+    def edit_contact_by_id(self, contact, id):
+        wd = self.app.wd
+        self.open_home_page()
+        self.open_edit_page(id)
         self.filling_fields(contact)
         # submit contact creation
         wd.find_element_by_name("update").click()
@@ -108,6 +129,10 @@ class ContactHelper:
     def select_contact_by_index(self, index):
         wd = self.app.wd
         wd.find_elements_by_name("selected[]")[index].click()
+
+    def select_contact_by_id(self, id):
+        wd = self.app.wd
+        wd.find_element_by_css_selector("input[value='%s']" % id).click()
 
     def open_home_page(self):
         wd = self.app.wd
