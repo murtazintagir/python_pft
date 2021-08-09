@@ -71,6 +71,7 @@ class GroupHelper:
         wd.find_element_by_name("edit").click()
         self.filling_field(group)
         wd.find_element_by_name("update").click()
+        self.return_to_groups_page()
         self.group_cashe = None
 
     def edit_group_by_id(self, group, id):
@@ -82,6 +83,7 @@ class GroupHelper:
         wd.find_element_by_name("edit").click()
         self.filling_field(group)
         wd.find_element_by_name("update").click()
+        self.return_to_groups_page()
         self.group_cashe = None
 
     def select_first_group(self):

@@ -105,22 +105,28 @@ class ContactHelper:
         self.filling_fields(contact)
         # submit contact creation
         wd.find_element_by_name("update").click()
+        wd.find_element_by_css_selector("div.msgbox")
         wd.find_element_by_link_text("home page").click()
         self.contact_cashe = None
 
     def edit_contact_by_id(self, contact, id):
         wd = self.app.wd
         self.open_home_page()
-        self.open_edit_page(id)
+        self.open_edit_page_by_id(id)
         self.filling_fields(contact)
         # submit contact creation
         wd.find_element_by_name("update").click()
+        wd.find_element_by_css_selector("div.msgbox")
         wd.find_element_by_link_text("home page").click()
         self.contact_cashe = None
 
     def open_edit_page(self, index):
         wd = self.app.wd
         wd.find_elements_by_xpath("//img[@alt='Edit']")[index].click()
+
+    def open_edit_page_by_id(self, id):
+        wd = self.app.wd
+        wd.find_elements_by_xpath("//img[@alt='Edit']")[id].click()
 
     def open_view_page(self, index):
         wd = self.app.wd
@@ -132,7 +138,7 @@ class ContactHelper:
 
     def select_contact_by_id(self, id):
         wd = self.app.wd
-        wd.find_element_by_css_selector("input[value='%s']" % id).click()
+        wd.find_elements_by_name("selected[]")[id].click()
 
     def open_home_page(self):
         wd = self.app.wd

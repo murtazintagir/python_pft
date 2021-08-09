@@ -4,22 +4,23 @@ from model.contact import Contact
 
 
 def test_edit_some_contact(app, db, check_ui):
-    contact = Contact(first_name="first_edit", middle_name="middle_edit", last_name="last_edit",
-                      nickname="nick_edit", title="title_edit", company="company_edit",
-                      address="address_edit", home="home_edit", mobile="mobile_edit", work="work_edit",
-                      fax="fax_edit", email="email_edit", email2="email2_edit", email3="email3_edit",
-                      homepage="homepage_edit", address2="address2_edit", phone2="phone2_edit",
-                      notes="notes_edit", bday="8", bmonth="May", byear="1989", aday="8", amonth="May",
-                      ayear="2089")
+    contact = Contact(first_name="first_name", middle_name="middle_name", last_name="last_name",
+            nickname="nickname", title="title", company="company",
+            address="address", home="home", mobile="mobile", work="work",
+            fax="fax", email="email", email2="email2", email3="email3",
+            homepage="homepage", address2="address2", phone2="phone2",
+            notes="notes", bday="8", bmonth="March", byear="1990", aday="9", amonth="March",
+            ayear="2090")
     if len(db.get_contact_list()) == 0:
         app.contact.create(contact)
     old_contacts = db.get_contact_list()
-    index = random.choice(old_contacts)
+    contact_index = random.choice(old_contacts)
+    index = old_contacts.index(contact_index)
     app.contact.edit_contact_by_id(contact, index)
-    assert len(old_contacts) == app.contact.count()
     new_contacts = db.get_contact_list()
-    old_contacts.append(contact)
-    assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)
+    old_contacts[index] = contact
+    assert len(old_contacts) == len(new_contacts)
+    assert old_contacts == new_contacts
     if check_ui:
         assert sorted(new_contacts, key=Contact.id_or_max) == sorted(app.contact.get_contact_list(), key=Contact.id_or_max)
 

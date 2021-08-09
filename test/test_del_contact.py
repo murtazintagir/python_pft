@@ -12,11 +12,12 @@ def test_delete_some_contact(app, db, check_ui):
     if len(db.get_contact_list()) == 0:
         app.contact.create(contact)
     old_contacts = db.get_contact_list()
-    index = random.choice(old_contacts)
-    app.contact.delete_contact_by_id(index.id)
+    contact_index = random.choice(old_contacts)
+    index = old_contacts.index(contact_index)
+    app.contact.delete_contact_by_id(index)
     assert len(old_contacts) - 1 == app.contact.count()
     new_contacts = db.get_contact_list()
-    old_contacts.remove(index)
+    old_contacts.remove(contact_index)
     assert old_contacts == new_contacts
     if check_ui:
         assert sorted(new_contacts, key=Contact.id_or_max) == sorted(app.contact.get_group_list(), key=Contact.id_or_max)
