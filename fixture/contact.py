@@ -205,3 +205,34 @@ class ContactHelper:
         mobilephone = re.search("M: (.*)", text).group(1)
         secondaryphone = re.search("P: (.*)", text).group(1)
         return Contact(home=homephone, mobile=mobilephone, work=workphone, phone2=secondaryphone)
+
+    def add_contact_to_group(self, id, group):
+        wd = self.app.wd
+        self.open_contact_page()
+        wd.find_element_by_css_selector("input[value='%s']" % id).click()
+        wd.find_element_by_css_selector("select[name = 'to_group'] > option[value = '%s']" % group.id).click()
+        wd.find_element_by_xpath("(//input[@value='Add to'])").click()
+        wd.find_element_by_css_selector("div.msgbox")
+        self.open_contact_page()
+        self.contact_cache = None
+
+    def delete_contact_from_group(self, id, group):
+        wd = self.app.wd
+        self.open_contact_page()
+        wd.find_element_by_css_selector("select[name = 'group'] > option[value = '%s']" % group.id).click()
+        wd.find_element_by_css_selector("input[value='%s']" % id).click()
+        wd.find_element_by_name("remove")
+        wd.find_element_by_name("remove").click()
+        wd.find_element_by_css_selector("div.msgbox")
+        self.open_contact_page()
+        self.contact_cache = None
+
+    def checker_that_old_contacts_not_zero(self, old_contacts):
+        if len(old_contacts) == 0:
+            self.create(
+                Contact(first_name="Testik", middle_name="Midtest", last_name="Lasttest", nickname="Nickname test",
+                        title="Mrs", company="Test Company", address="5th Avenue", home="15",
+                        mobile="111999333", work="12123342", fax="2345645", email="test@test.com",
+                        bday="11", bmonth="July", byear="1991", aday="8",
+                        amonth="November", ayear="1991", address2="Sec address", phone2="163434",
+                        notes="testtesttest note"))

@@ -1,5 +1,7 @@
 from model.group import Group
+from fixture.orm import ORMFixture
 
+db = ORMFixture(host="127.0.0.1", name="addressbook", user="root", password="")
 
 class GroupHelper:
 
@@ -125,3 +127,18 @@ class GroupHelper:
                 id = element.find_element_by_name("selected[]").get_attribute("value")
                 self.group_cashe.append(Group(name=text, id=id))
         return list(self.group_cashe)
+
+    def get_available_groups(self, old_groups, old_contacts, db):
+        available_groups = []
+        for i in old_groups:
+            number_of_contacts_in_group = len(db.get_contacts_in_group(i))
+            if number_of_contacts_in_group != len(old_contacts):
+                available_groups.append(i)
+        if len(available_groups) == 0:
+            self.create(Group(name="name", header="header", footer="footer"))
+            available_groups = db.get_group_list()
+        return available_groups
+
+    def checker_that_old_groups_not_zero(self, old_groups):
+        if len(old_groups) == 0:
+            self.create(Group(name="name", header="header", footer="footer"))
